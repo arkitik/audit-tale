@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>audit-tale</artifactId>
+        <groupId>io.arkitik.audit.tale</groupId>
+        <version>v1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>audit-tale-core</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>audit-tale-core-adapter</module>
+        <module>audit-tale-core-domain</module>
+        <module>audit-tale-core-entity</module>
+        <module>audit-tale-core-operation</module>
+        <module>audit-tale-core-port</module>
+        <module>audit-tale-core-sdk</module>
+        <module>audit-tale-core-store</module>
+    </modules>
+
+</project>
