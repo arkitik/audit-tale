@@ -12,5 +12,5 @@ import javax.persistence.Embeddable
 @Embeddable
 data class ActorTypeImpl(
     @Column(nullable = false)
-    override val name: String,
+    override val actorType: String,
 ) : ActorType

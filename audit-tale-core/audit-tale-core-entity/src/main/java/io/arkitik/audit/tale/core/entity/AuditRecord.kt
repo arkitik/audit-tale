@@ -3,6 +3,8 @@ package io.arkitik.audit.tale.core.entity
 import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
 import io.arkitik.audit.tale.core.domain.embedded.AuditChangeType
 import io.arkitik.audit.tale.core.entity.embedded.ActorTypeImpl
+import io.arkitik.radix.develop.identity.Identity
+import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
@@ -13,9 +15,9 @@ import javax.persistence.*
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
 @MappedSuperclass
-class AuditRecord<O>(
+class AuditRecord<ID : Serializable, I : Identity<ID>>(
     @ManyToOne(optional = false)
-    open override val record: O,
+    open override val record: I,
     @Column(nullable = false, updatable = false)
     override val keyName: String,
     @Column(updatable = false)
@@ -33,4 +35,4 @@ class AuditRecord<O>(
     override val uuid: String = UUID.randomUUID().toString().replace("-", ""),
     @Column(nullable = false, updatable = false)
     override val creationDate: LocalDateTime = LocalDateTime.now(),
-) : AuditRecordIdentity<O>
+) : AuditRecordIdentity<ID, I>

@@ -1,10 +1,10 @@
 package io.arkitik.audit.tale.engine.store.adapter
 
+import io.arkitik.audit.tale.engine.store.adapter.creator.CoreAuditStoreIdentityCreator
 import io.arkitik.audit.tale.engine.store.adapter.creator.DefaultIdentityStoreCreator
+import io.arkitik.audit.tale.engine.store.adapter.updater.CoreAuditStoreIdentityUpdater
 import io.arkitik.audit.tale.engine.store.adapter.updater.DefaultIdentityStoreUpdater
 import io.arkitik.audit.tale.engine.store.core.AuditableStore
-import io.arkitik.audit.tale.engine.store.core.creator.AuditStoreIdentityCreator
-import io.arkitik.audit.tale.engine.store.core.updater.AuditStoreIdentityUpdater
 import io.arkitik.radix.adapter.shared.StoreImpl
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.radix.develop.identity.Identity
@@ -36,7 +36,7 @@ abstract class AuditableStoreImpl<ID : Serializable, I : Identity<ID>, E : I>(
         return DefaultIdentityStoreUpdater(identityUpdater(radixActorId, radixActor))
     }
 
-    abstract override fun identityCreator(actorId: String, actorType: String): AuditStoreIdentityCreator<ID, I>
+    abstract override fun identityCreator(actorId: String, actorType: String): CoreAuditStoreIdentityCreator<ID, I>
 
-    abstract override fun I.identityUpdater(actorId: String, actorType: String): AuditStoreIdentityUpdater<ID, I>
+    abstract override fun I.identityUpdater(actorId: String, actorType: String): CoreAuditStoreIdentityUpdater<ID, I>
 }

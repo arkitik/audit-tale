@@ -1,10 +1,10 @@
-package io.arkitik.audit.tale.engine.store.adapter.creator
+package io.arkitik.audit.tale.engine.store.adapter.updater
 
 import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
-import io.arkitik.audit.tale.engine.store.core.creator.AuditStoreIdentityCreator
 import io.arkitik.audit.tale.engine.store.core.log.AuditLogData
 import io.arkitik.audit.tale.engine.store.core.log.AuditLogs
 import io.arkitik.audit.tale.engine.store.core.operator.AuditOperator
+import io.arkitik.audit.tale.engine.store.core.updater.AuditStoreIdentityUpdater
 import io.arkitik.radix.develop.identity.Identity
 import java.io.Serializable
 
@@ -14,10 +14,10 @@ import java.io.Serializable
  * Created At 11:32 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-abstract class CoreAuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>>(
+abstract class CoreAuditStoreIdentityUpdater<ID : Serializable, I : Identity<ID>>(
     private val actorId: String,
     private val actorType: String,
-) : AuditStoreIdentityCreator<ID, I>() {
+) : AuditStoreIdentityUpdater<ID, I>() {
     private val auditLogs: MutableList<AuditLogData<String>> = mutableListOf()
 
     override fun <T> addHistoryRecord(log: AuditLogData<T>, mapper: (T) -> String?): AuditOperator<I> {
@@ -29,8 +29,8 @@ abstract class CoreAuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>
         return this
     }
 
-    final override fun create(): AuditLogs<ID, I> {
-        val identity = createIdentity()
+    final override fun update(): AuditLogs<ID, I> {
+        val identity = updateIdentity()
         return AuditLogs(
             auditLogs.map {
                 identity.createAudit(it, actorId, actorType)
@@ -43,7 +43,7 @@ abstract class CoreAuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>
         log: AuditLogData<String>,
         actorId: String,
         actorType: String,
-    ): AuditRecordIdentity<ID,I>
+    ): AuditRecordIdentity<ID, I>
 
-    abstract fun createIdentity(): I
+    abstract fun updateIdentity(): I
 }

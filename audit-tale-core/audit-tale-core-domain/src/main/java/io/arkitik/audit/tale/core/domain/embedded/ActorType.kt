@@ -8,5 +8,5 @@ import io.arkitik.radix.develop.identity.EmbeddedData
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
 interface ActorType : EmbeddedData {
-    val name: String
+    val actorType: String
 }

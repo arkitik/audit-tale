@@ -6,9 +6,9 @@ import io.arkitik.audit.tale.core.entity.AuditRecord
 import io.arkitik.audit.tale.core.entity.embedded.ActorTypeImpl
 import io.arkitik.audit.tale.engine.store.adapter.AuditableStoreImpl
 import io.arkitik.audit.tale.engine.store.adapter.creator.CoreAuditStoreIdentityCreator
+import io.arkitik.audit.tale.engine.store.adapter.updater.CoreAuditStoreIdentityUpdater
 import io.arkitik.audit.tale.engine.store.core.log.AuditLogData
 import io.arkitik.audit.tale.engine.store.core.log.AuditLogs
-import io.arkitik.audit.tale.engine.store.core.updater.AuditStoreIdentityUpdater
 import io.arkitik.radix.develop.identity.Identity
 import io.arkitik.radix.develop.store.creator.StoreIdentityCreator
 import org.springframework.stereotype.Service
@@ -34,11 +34,6 @@ data class SampleEntity(
 @Entity
 data class SampleEntityAudit(
     @ManyToOne(optional = false)
-    @JoinColumn(
-        foreignKey = ForeignKey(
-            name = "sample_audit_fk"
-        )
-    )
     override val record: SampleEntity,
     override val keyName: String,
     override val oldValue: String?,
@@ -47,7 +42,7 @@ data class SampleEntityAudit(
     @Embedded
     override val actorType: ActorTypeImpl,
     override val changeType: AuditChangeType,
-) : AuditRecord<SampleEntity>(
+) : AuditRecord<String, SampleEntity>(
     record,
     keyName,
     oldValue,
@@ -69,7 +64,7 @@ class SampleEntityStore(
     override fun SampleEntity.identityUpdater(
         actorId: String,
         actorType: String,
-    ): AuditStoreIdentityUpdater<String, SampleEntity> {
+    ): CoreAuditStoreIdentityUpdater<String, SampleEntity> {
         TODO("Not yet implemented")
     }
 }
@@ -106,7 +101,7 @@ class SampleEntityCreator(
         log: AuditLogData<String>,
         actorId: String,
         actorType: String,
-    ): AuditRecordIdentity<SampleEntity> {
+    ): AuditRecordIdentity<String, SampleEntity> {
         return SampleEntityAudit(
             this,
             log.keyName,

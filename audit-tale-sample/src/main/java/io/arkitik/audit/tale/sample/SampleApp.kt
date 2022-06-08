@@ -1,8 +1,11 @@
 package io.arkitik.audit.tale.sample
 
-import io.arkitik.audit.tale.sample.entity.SampleEntityAudit
-import io.arkitik.audit.tale.sample.entity.SampleEntityAuditRepository
+import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
+import io.arkitik.audit.tale.core.sdk.AuditTaleSdk
+import io.arkitik.audit.tale.core.sdk.query.auditQueryRequest
+import io.arkitik.audit.tale.sample.entity.SampleEntity
 import io.arkitik.audit.tale.sample.entity.SampleEntityStore
+import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.storeCreator
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -19,7 +22,7 @@ import java.util.*
 @SpringBootApplication
 class SampleApp(
     private val sampleEntityStore: SampleEntityStore,
-    private val sampleEntityAuditRepository: SampleEntityAuditRepository,
+    private val sampleAuditSdk: AuditTaleSdk<String, SampleEntity>,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
         with(sampleEntityStore) {
@@ -30,15 +33,19 @@ class SampleApp(
                     create()
                 }
                 auditLogs.identity.save()
-                sampleEntityAuditRepository.saveAll(
-                    auditLogs.logs.map {
-                        it as SampleEntityAudit
-                    }
-                )
+                sampleAuditSdk.insertAudits.runOperation(auditLogs.logs)
+            }
+        }
+        with(sampleAuditSdk.auditQuery) {
+            auditQueryRequest<String> {
+                byKey("name")
+                size(1000)
+                orderedByCreationDate(true)
+            }.operate().let {
+                println(it.content.map(AuditRecordIdentity<String, SampleEntity>::newValue))
             }
         }
     }
-
 }
 
 fun main(args: Array<String>) {
