@@ -1,0 +1,21 @@
+application:
+  title: audit_tale
+  version: v1.0.0
+spring:
+  datasource:
+    url: jdbc:mysql://${database_host:localhost}:${database_port:3307}/${database_name:audit_tale}
+    username: ${database_user:audit_tale}
+    password: ${database_password:audit_tale}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  main:
+    allow-bean-definition-overriding: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        storage_engine: innodb
+        enable_lazy_load_no_trans: true
