@@ -11,5 +11,5 @@ import java.io.Serializable
  * Created At 9:25 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-abstract class AuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>> : AuditOperator<I>(),
+interface AuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>> : AuditOperator<I>,
     StoreIdentityCreator<ID, AuditLogs<ID, I>>

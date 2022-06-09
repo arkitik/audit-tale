@@ -17,7 +17,7 @@ import java.io.Serializable
 abstract class CoreAuditStoreIdentityUpdater<ID : Serializable, I : Identity<ID>>(
     private val actorId: String,
     private val actorType: String,
-) : AuditStoreIdentityUpdater<ID, I>() {
+) : AuditStoreIdentityUpdater<ID, I> {
     private val auditLogs: MutableList<AuditLogData<String>> = mutableListOf()
 
     override fun <T> addHistoryRecord(log: AuditLogData<T>, mapper: (T) -> String?): AuditOperator<I> {
