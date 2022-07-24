@@ -9,6 +9,20 @@ import io.arkitik.audit.tale.engine.store.core.log.AuditLogData
  */
 interface AuditOperator<I> {
     fun <T> addHistoryRecord(
+        keyName: String,
+        oldValue: T?,
+        newValue: T?,
+        mapper: (T) -> String?,
+    ) = addHistoryRecord(
+        AuditLogData(
+            keyName,
+            oldValue,
+            newValue,
+        ),
+        mapper
+    )
+
+    fun <T> addHistoryRecord(
         log: AuditLogData<T>,
         mapper: (T) -> String? = { it?.toString() },
     ): AuditOperator<I>

@@ -15,6 +15,7 @@ import javax.persistence.*
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
 @MappedSuperclass
+@Deprecated("Will be removed on future releases, use your own audit-tale entity implementation instead")
 class AuditRecord<ID : Serializable, I : Identity<ID>>(
     @ManyToOne(optional = false)
     open override val record: I,

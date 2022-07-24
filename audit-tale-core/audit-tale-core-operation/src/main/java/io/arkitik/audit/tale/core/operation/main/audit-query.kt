@@ -16,17 +16,17 @@ import java.io.Serializable
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
 private typealias Predicate<ID> = (AuditQueryRequest<ID>) -> Boolean
-private typealias QueryOperation<ID, I> = Operation<AuditQueryRequest<ID>, PageData<AuditRecordIdentity<ID, I>>>
+private typealias QueryOperation<ID, A> = Operation<AuditQueryRequest<ID>, PageData<A>>
 
-class AuditQueryOperation<ID : Serializable, I : Identity<ID>>(
-    auditRecordStoreQuery: AuditRecordStoreQuery<ID, I>,
-) : Operation<AuditQueryRequest<ID>, PagedData<AuditRecordIdentity<ID, I>>> {
+class AuditQueryOperation<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
+    auditRecordStoreQuery: AuditRecordStoreQuery<ID, I, A>,
+) : Operation<AuditQueryRequest<ID>, PagedData<A>> {
     private val auditQueryByKeysAndUuidsOrdered = AuditQueryByKeysAndUuidsOrdered(auditRecordStoreQuery)
     private val auditQueryByUuidsOrdered = AuditQueryByUuidsOrdered(auditRecordStoreQuery)
     private val auditQueryByKeysOrdered = AuditQueryByKeysOrdered(auditRecordStoreQuery)
     private val auditQueryOrdered = AuditQueryOrdered(auditRecordStoreQuery)
 
-    private val operationMapper: Map<QueryOperation<ID, I>, Predicate<ID>> = buildMap {
+    private val operationMapper: Map<QueryOperation<ID, A>, Predicate<ID>> = buildMap {
         put(auditQueryOrdered) {
             it.keys.isEmpty() and it.recordUuids.isEmpty()
         }
@@ -41,7 +41,7 @@ class AuditQueryOperation<ID : Serializable, I : Identity<ID>>(
         }
     }
 
-    override fun AuditQueryRequest<ID>.operate(): PagedData<AuditRecordIdentity<ID, I>> {
+    override fun AuditQueryRequest<ID>.operate(): PagedData<A> {
         val queryOperation = operationMapper.entries
             .firstOrNull {
                 it.value(this)

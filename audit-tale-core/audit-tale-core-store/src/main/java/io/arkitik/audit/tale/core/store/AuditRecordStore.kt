@@ -1,9 +1,7 @@
 package io.arkitik.audit.tale.core.store
 
 import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
-import io.arkitik.audit.tale.core.store.creator.AuditRecordCreator
 import io.arkitik.audit.tale.core.store.query.AuditRecordStoreQuery
-import io.arkitik.audit.tale.core.store.updater.AuditRecordUpdater
 import io.arkitik.radix.develop.identity.Identity
 import io.arkitik.radix.develop.store.Store
 import java.io.Serializable
@@ -13,10 +11,13 @@ import java.io.Serializable
  * Created At 11:09 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-interface AuditRecordStore<ID : Serializable, I : Identity<ID>> : Store<String, AuditRecordIdentity<ID, I>> {
-    override val storeQuery: AuditRecordStoreQuery<ID, I>
+interface AuditRecordStore<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>> :
+    Store<String, A> {
+    override val storeQuery: AuditRecordStoreQuery<ID, I, A>
 
-    override fun identityCreator(): AuditRecordCreator<ID, I>
+    override fun identityCreator() =
+        throw IllegalStateException("Audit records can be created only by the auditable entities, see @{audit-tale-engine}")
 
-    override fun AuditRecordIdentity<ID, I>.identityUpdater(): AuditRecordUpdater<ID, I>
+    override fun A.identityUpdater() =
+        throw IllegalStateException("Audit records are not allowed to get updated.")
 }

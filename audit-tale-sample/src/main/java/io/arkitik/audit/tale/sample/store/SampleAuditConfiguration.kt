@@ -3,7 +3,8 @@ package io.arkitik.audit.tale.sample.store
 import io.arkitik.audit.tale.core.adapter.AuditRecordStoreImpl
 import io.arkitik.audit.tale.core.operation.AuditTaleSdkImpl
 import io.arkitik.audit.tale.core.store.AuditRecordStore
-import io.arkitik.audit.tale.sample.entity.SampleEntity
+import io.arkitik.audit.tale.sample.entity.SampleEntityAuditIdentity
+import io.arkitik.audit.tale.sample.entity.SampleIdentity
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -21,7 +22,7 @@ class SampleAuditConfiguration {
 
     @Bean
     fun sampleAuditSdk(
-        sampleAuditStore: AuditRecordStore<String, SampleEntity>,
+        sampleAuditStore: AuditRecordStore<String, SampleIdentity, SampleEntityAuditIdentity>,
     ) = AuditTaleSdkImpl(
         sampleAuditStore
     )

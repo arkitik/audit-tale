@@ -1,10 +1,10 @@
 package io.arkitik.audit.tale.sample
 
-import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
 import io.arkitik.audit.tale.core.sdk.AuditTaleSdk
 import io.arkitik.audit.tale.core.sdk.query.auditQueryRequest
-import io.arkitik.audit.tale.sample.entity.SampleEntity
+import io.arkitik.audit.tale.sample.entity.SampleEntityAuditIdentity
 import io.arkitik.audit.tale.sample.entity.SampleEntityStore
+import io.arkitik.audit.tale.sample.entity.SampleIdentity
 import io.arkitik.radix.develop.operation.ext.runOperation
 import io.arkitik.radix.develop.store.storeCreator
 import org.springframework.boot.CommandLineRunner
@@ -22,7 +22,7 @@ import java.util.*
 @SpringBootApplication
 class SampleApp(
     private val sampleEntityStore: SampleEntityStore,
-    private val sampleAuditSdk: AuditTaleSdk<String, SampleEntity>,
+    private val sampleAuditSdk: AuditTaleSdk<String, SampleIdentity, SampleEntityAuditIdentity>,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
         with(sampleEntityStore) {
@@ -41,9 +41,10 @@ class SampleApp(
                 byKey("name")
                 size(1000)
                 orderedByCreationDate(true)
-            }.operate().let {
-                println(it.content.map(AuditRecordIdentity<String, SampleEntity>::newValue))
-            }
+            }.operate()
+                .let {
+                    println(it.content.map(SampleEntityAuditIdentity::newValue))
+                }
         }
     }
 }

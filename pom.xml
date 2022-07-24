@@ -7,7 +7,7 @@
     <groupId>io.arkitik.audit.tale</groupId>
     <artifactId>audit-tale</artifactId>
     <packaging>pom</packaging>
-    <version>v1.0.0</version>
+    <version>v1.1.0</version>
     <modules>
         <module>audit-tale-core</module>
         <module>audit-tale-engine</module>
@@ -43,11 +43,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <kotlin.version>1.6.21</kotlin.version>
-        <dokka.version>1.6.21</dokka.version>
+        <kotlin.version>1.7.0</kotlin.version>
+        <dokka.version>1.7.0</dokka.version>
         <spring-boot.version>2.7.0</spring-boot.version>
         <logbook.version>2.14.0</logbook.version>
-        <radix.version>v1.3.0</radix.version>
+        <radix.version>v1.4.1</radix.version>
     </properties>
     <dependencies>
         <dependency>
