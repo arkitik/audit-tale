@@ -1,5 +1,6 @@
 package io.arkitik.audit.tale.engine.store.adapter.creator
 
+import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
 import io.arkitik.audit.tale.engine.store.core.creator.AuditStoreIdentityCreator
 import io.arkitik.radix.develop.identity.Identity
 import io.arkitik.radix.develop.store.creator.StoreIdentityCreator
@@ -10,8 +11,8 @@ import java.io.Serializable
  * Created At 9:45 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-class DefaultIdentityStoreCreator<ID : Serializable, I : Identity<ID>>(
-    private val auditStoreIdentityCreator: AuditStoreIdentityCreator<ID, I>,
+class DefaultIdentityStoreCreator<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
+    private val auditStoreIdentityCreator: AuditStoreIdentityCreator<ID, I, A>,
 ) : StoreIdentityCreator<ID, I> {
     override fun ID.uuid(): StoreIdentityCreator<ID, I> {
         auditStoreIdentityCreator.run {

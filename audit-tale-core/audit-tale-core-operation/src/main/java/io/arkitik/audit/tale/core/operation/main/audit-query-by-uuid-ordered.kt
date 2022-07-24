@@ -15,9 +15,9 @@ import java.io.Serializable
  * Created At 10:11 PM, 08 , **Wed, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-internal class AuditQueryByUuidsOrdered<ID : Serializable, I : Identity<ID>>(
-    private val auditRecordStoreQuery: AuditRecordStoreQuery<ID, I>,
-) : Operation<AuditQueryRequest<ID>, PageData<AuditRecordIdentity<ID, I>>> {
+internal class AuditQueryByUuidsOrdered<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
+    private val auditRecordStoreQuery: AuditRecordStoreQuery<ID, I, A>,
+) : Operation<AuditQueryRequest<ID>, PageData<A>> {
     override fun AuditQueryRequest<ID>.operate() =
         auditRecordStoreQuery.findAllByRecordUuidInOrderedBy(
             recordUuids = recordUuids,

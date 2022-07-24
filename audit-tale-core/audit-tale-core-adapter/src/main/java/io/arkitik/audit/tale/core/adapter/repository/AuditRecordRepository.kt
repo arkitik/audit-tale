@@ -1,6 +1,6 @@
 package io.arkitik.audit.tale.core.adapter.repository
 
-import io.arkitik.audit.tale.core.entity.AuditRecord
+import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
 import io.arkitik.radix.adapter.shared.repository.RadixRepository
 import io.arkitik.radix.develop.identity.Identity
 import org.springframework.data.domain.Page
@@ -14,14 +14,14 @@ import java.io.Serializable
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
 @NoRepositoryBean
-interface AuditRecordRepository<ID : Serializable, I : Identity<ID>, A : AuditRecord<ID, I>> :
-    RadixRepository<String, A> {
-    fun findAllByRecordUuidIn(uuids: List<ID>, pageable: Pageable): Page<A>
-    fun findAllByKeyNameIn(keyNames: List<String>, pageable: Pageable): Page<A>
+interface AuditRecordRepository<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>, E : A> :
+    RadixRepository<String, E> {
+    fun findAllByRecordUuidIn(uuids: List<ID>, pageable: Pageable): Page<E>
+    fun findAllByKeyNameIn(keyNames: List<String>, pageable: Pageable): Page<E>
 
     fun findAllByKeyNameInAndRecordUuidIn(
         keyNames: List<String>,
         uuids: List<ID>,
         pageable: Pageable,
-    ): Page<A>
+    ): Page<E>
 }

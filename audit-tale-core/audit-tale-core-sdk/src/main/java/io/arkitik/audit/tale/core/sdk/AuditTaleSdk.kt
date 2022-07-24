@@ -12,7 +12,7 @@ import java.io.Serializable
  * Created At 11:05 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-interface AuditTaleSdk<ID : Serializable, I : Identity<ID>> {
-    val insertAudits: Operation<List<AuditRecordIdentity<ID, I>>, Unit>
-    val auditQuery: Operation<AuditQueryRequest<ID>, PagedData<AuditRecordIdentity<ID, I>>>
+interface AuditTaleSdk<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>> {
+    val insertAudits: Operation<List<A>, Unit>
+    val auditQuery: Operation<AuditQueryRequest<ID>, PagedData<A>>
 }

@@ -11,10 +11,10 @@ import java.io.Serializable
  * Created At 10:05 PM, 08 , **Wed, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-class InsertAuditsOperation<ID : Serializable, I : Identity<ID>>(
-    private val auditRecordStore: AuditRecordStore<ID, I>,
-) : Operation<List<AuditRecordIdentity<ID, I>>, Unit> {
-    override fun List<AuditRecordIdentity<ID, I>>.operate() {
+class InsertAuditsOperation<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
+    private val auditRecordStore: AuditRecordStore<ID, I, A>,
+) : Operation<List<A>, Unit> {
+    override fun List<A>.operate() {
         with(auditRecordStore) {
             save()
         }

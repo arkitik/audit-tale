@@ -5,12 +5,16 @@
     <parent>
         <artifactId>audit-tale-core</artifactId>
         <groupId>io.arkitik.audit.tale</groupId>
-        <version>v1.0.0</version>
+        <version>v1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>audit-tale-core-sdk</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>io.arkitik.radix</groupId>
+            <artifactId>radix-development-operation</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.arkitik.radix</groupId>
             <artifactId>radix-development-operation-ext</artifactId>

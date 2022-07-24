@@ -2,7 +2,6 @@ package io.arkitik.audit.tale.core.adapter.query
 
 import io.arkitik.audit.tale.core.adapter.repository.AuditRecordRepository
 import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
-import io.arkitik.audit.tale.core.entity.AuditRecord
 import io.arkitik.audit.tale.core.store.query.AuditRecordStoreQuery
 import io.arkitik.audit.tale.core.store.query.OrderProperty
 import io.arkitik.radix.adapter.shared.paged
@@ -18,11 +17,11 @@ import java.io.Serializable
  * Created At 10:55 PM, 08 , **Wed, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-class AuditRecordStoreQueryImpl<ID : Serializable, I : Identity<ID>, A : AuditRecord<ID, I>>(
-    private val repository: AuditRecordRepository<ID, I, A>,
-) : StoreQueryImpl<String, AuditRecordIdentity<ID, I>, A>(
+class AuditRecordStoreQueryImpl<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>, E : A>(
+    private val repository: AuditRecordRepository<ID, I, A, E>,
+) : StoreQueryImpl<String, A, E>(
     repository
-), AuditRecordStoreQuery<ID, I> {
+), AuditRecordStoreQuery<ID, I, A> {
     override fun findAllOrderedBy(
         sorting: List<OrderProperty>,
         pageableData: PageableData,

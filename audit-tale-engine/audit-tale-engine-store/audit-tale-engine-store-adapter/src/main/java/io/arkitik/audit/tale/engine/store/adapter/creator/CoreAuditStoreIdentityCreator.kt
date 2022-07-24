@@ -14,22 +14,23 @@ import java.io.Serializable
  * Created At 11:32 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-abstract class CoreAuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>>(
+abstract class CoreAuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
     private val actorId: String,
     private val actorType: String,
-) : AuditStoreIdentityCreator<ID, I> {
+) : AuditStoreIdentityCreator<ID, I, A> {
     private val auditLogs: MutableList<AuditLogData<String>> = mutableListOf()
-
     override fun <T> addHistoryRecord(log: AuditLogData<T>, mapper: (T) -> String?): AuditOperator<I> {
-        auditLogs.add(AuditLogData(
-            log.keyName,
-            log.oldValue?.let(mapper),
-            log.newValue?.let(mapper),
-        ))
+        auditLogs.add(
+            AuditLogData(
+                log.keyName,
+                log.oldValue?.let(mapper),
+                log.newValue?.let(mapper),
+            )
+        )
         return this
     }
 
-    final override fun create(): AuditLogs<ID, I> {
+    final override fun create(): AuditLogs<ID, I, A> {
         val identity = createIdentity()
         return AuditLogs(
             auditLogs.map {
@@ -43,7 +44,7 @@ abstract class CoreAuditStoreIdentityCreator<ID : Serializable, I : Identity<ID>
         log: AuditLogData<String>,
         actorId: String,
         actorType: String,
-    ): AuditRecordIdentity<ID, I>
+    ): A
 
     abstract fun createIdentity(): I
 }

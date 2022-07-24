@@ -9,8 +9,8 @@ import java.io.Serializable
  * Created At 9:33 PM, 07 , **Tue, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
-open class AuditLogs<ID : Serializable, I : Identity<ID>>(
-    open val logs: List<AuditRecordIdentity<ID, I>>,
+open class AuditLogs<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
+    open val logs: List<A>,
     val identity: I,
 ) : Identity<ID> {
     override val uuid = identity.uuid

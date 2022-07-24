@@ -2,7 +2,6 @@ package io.arkitik.audit.tale.sample.entity
 
 import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
 import io.arkitik.audit.tale.core.domain.embedded.AuditChangeType
-import io.arkitik.audit.tale.core.entity.AuditRecord
 import io.arkitik.audit.tale.core.entity.embedded.ActorTypeImpl
 import io.arkitik.audit.tale.engine.store.adapter.AuditableStoreImpl
 import io.arkitik.audit.tale.engine.store.adapter.creator.CoreAuditStoreIdentityCreator
@@ -21,50 +20,59 @@ import javax.persistence.*
  * Created At 12:05 AM, 08 , **Wed, June 2022**
  * Project *audit-tale* [arkitik.io](https://arkitik.io)
  */
+interface SampleIdentity : Identity<String> {
+    val name: String
+}
+
+interface SampleEntityAuditIdentity : AuditRecordIdentity<String, SampleIdentity>
+
 @Entity
 data class SampleEntity(
     @Column(nullable = false)
-    val name: String,
+    override val name: String,
     @Id
     override val uuid: String?,
     @Column(nullable = false)
     override val creationDate: LocalDateTime,
-) : Identity<String>
+) : SampleIdentity
 
 @Entity
 data class SampleEntityAudit(
     @ManyToOne(optional = false)
     override val record: SampleEntity,
+    @Column(nullable = false, updatable = false)
     override val keyName: String,
+    @Column(updatable = false)
     override val oldValue: String?,
+    @Column(updatable = false)
     override val newValue: String?,
+    @Column(nullable = false, updatable = false)
     override val actorId: String,
     @Embedded
     override val actorType: ActorTypeImpl,
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false)
     override val changeType: AuditChangeType,
-) : AuditRecord<String, SampleEntity>(
-    record,
-    keyName,
-    oldValue,
-    newValue,
-    actorId,
-    actorType,
-    changeType,
-)
+    @Id
+    override val uuid: String = UUID.randomUUID().toString().replace("-", ""),
+    @Column(nullable = false, updatable = false)
+    override val creationDate: LocalDateTime = LocalDateTime.now(),
+) : SampleEntityAuditIdentity
 
 @Service
 class SampleEntityStore(
     repository: SampleEntityRepository,
-) : AuditableStoreImpl<String, SampleEntity, SampleEntity>(
-    repository) {
-    override fun SampleEntity.map() = this
+) : AuditableStoreImpl<String, SampleIdentity, SampleEntity, SampleEntityAuditIdentity>(
+    repository
+) {
+    override fun SampleIdentity.map(): SampleEntity = this as SampleEntity
     override fun identityCreator(actorId: String, actorType: String) =
         SampleEntityCreator(actorId, actorType)
 
-    override fun SampleEntity.identityUpdater(
+    override fun SampleIdentity.identityUpdater(
         actorId: String,
         actorType: String,
-    ): CoreAuditStoreIdentityUpdater<String, SampleEntity> {
+    ): CoreAuditStoreIdentityUpdater<String, SampleIdentity, SampleEntityAuditIdentity> {
         TODO("Not yet implemented")
     }
 }
@@ -72,46 +80,40 @@ class SampleEntityStore(
 class SampleEntityCreator(
     actorId: String,
     actorType: String,
-) : CoreAuditStoreIdentityCreator<String, SampleEntity>(actorId, actorType) {
+) : CoreAuditStoreIdentityCreator<String, SampleIdentity, SampleEntityAuditIdentity>(actorId, actorType) {
     private var uuid: String = UUID.randomUUID().toString().replace("-", "")
     private lateinit var name: String
 
-    override fun String.uuid(): StoreIdentityCreator<String, AuditLogs<String, SampleEntity>> {
+    override fun String.uuid(): StoreIdentityCreator<String, AuditLogs<String, SampleIdentity, SampleEntityAuditIdentity>> {
         uuid = this
-        addHistoryRecord(AuditLogData(
-            "uuid",
-            null,
-            this
-        ))
         return this@SampleEntityCreator
     }
 
     fun String.name(): SampleEntityCreator {
         name = this
-
-        addHistoryRecord(AuditLogData(
-            "name",
-            null,
-            this
-        ))
+        addHistoryRecord(
+            AuditLogData(
+                SampleIdentity::name.name,
+                null,
+                this
+            )
+        )
         return this@SampleEntityCreator
     }
 
-    override fun SampleEntity.createAudit(
+    override fun SampleIdentity.createAudit(
         log: AuditLogData<String>,
         actorId: String,
         actorType: String,
-    ): AuditRecordIdentity<String, SampleEntity> {
-        return SampleEntityAudit(
-            this,
-            log.keyName,
-            log.oldValue,
-            log.newValue,
-            actorId,
-            ActorTypeImpl(actorType),
-            AuditChangeType.CREATE
-        )
-    }
+    ) = SampleEntityAudit(
+        this as SampleEntity,
+        log.keyName,
+        log.oldValue,
+        log.newValue,
+        actorId,
+        ActorTypeImpl(actorType),
+        AuditChangeType.CREATE
+    )
 
     override fun createIdentity(): SampleEntity {
         return SampleEntity(
