@@ -25,72 +25,74 @@ class AuditRecordStoreQueryImpl<ID : Serializable, I : Identity<ID>, A : AuditRe
     override fun findAllOrderedBy(
         sorting: List<OrderProperty>,
         pageableData: PageableData,
-    ) = paged(repository.findAll(
-        PageRequest.of(
-            pageableData.page,
-            pageableData.size,
-            Sort.by(
-                sorting.map {
-                    Sort.Order.asc(
-                        it.keyName
-                    )
-                }
+    ) = paged(
+        repository.findAll(
+            PageRequest.of(
+                pageableData.page,
+                pageableData.size,
+                sorting.asSortBy()
             )
-        )))
+        )
+    )
 
     override fun findAllByRecordUuidInOrderedBy(
         recordUuids: List<ID>,
         sorting: List<OrderProperty>,
         pageableData: PageableData,
-    ) = paged(repository.findAllByRecordUuidIn(
-        uuids = recordUuids,
-        pageable = PageRequest.of(
-            pageableData.page,
-            pageableData.size,
-            Sort.by(
-                sorting.map {
-                    Sort.Order.asc(
-                        it.keyName
-                    )
-                }
+    ) = paged(
+        repository.findAllByRecordUuidIn(
+            uuids = recordUuids,
+            pageable = PageRequest.of(
+                pageableData.page,
+                pageableData.size,
+                sorting.asSortBy()
             )
-        )))
+        )
+    )
 
     override fun findAllByKeyNameInOrderedBy(
         keys: List<String>,
         sorting: List<OrderProperty>,
         pageableData: PageableData,
-    ) = paged(repository.findAllByKeyNameIn(
-        keyNames = keys,
-        pageable = PageRequest.of(
-            pageableData.page,
-            pageableData.size,
-            Sort.by(
-                sorting.map {
-                    Sort.Order.asc(
-                        it.keyName
-                    )
-                }
+    ) = paged(
+        repository.findAllByKeyNameIn(
+            keyNames = keys,
+            pageable = PageRequest.of(
+                pageableData.page,
+                pageableData.size,
+                sorting.asSortBy()
             )
-        )))
+        )
+    )
 
     override fun findAllByKeyNameInAndRecordUuidInOrderedBy(
         keys: List<String>,
         recordUuids: List<ID>,
         sorting: List<OrderProperty>,
         pageableData: PageableData,
-    ) = paged(repository.findAllByKeyNameInAndRecordUuidIn(
-        keyNames = keys,
-        uuids = recordUuids,
-        pageable = PageRequest.of(
-            pageableData.page,
-            pageableData.size,
-            Sort.by(
-                sorting.map {
-                    Sort.Order.asc(
-                        it.keyName
-                    )
-                }
+    ) = paged(
+        repository.findAllByKeyNameInAndRecordUuidIn(
+            keyNames = keys,
+            uuids = recordUuids,
+            pageable = PageRequest.of(
+                pageableData.page,
+                pageableData.size,
+                sorting.asSortBy()
             )
-        )))
+        )
+    )
 }
+
+fun List<OrderProperty>.asSortBy() =
+    Sort.by(
+        map {
+            if (it.ascending)
+                Sort.Order.asc(
+                    it.keyName
+                )
+            else
+                Sort.Order.desc(
+                    it.keyName
+                )
+        }
+    )
