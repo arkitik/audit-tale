@@ -46,6 +46,18 @@ class SampleApp(
                     println(it.content.map(SampleEntityAuditIdentity::newValue))
                 }
         }
+        println("=================================")
+        println("=================================")
+        with(sampleAuditSdk.auditQuery) {
+            auditQueryRequest<String> {
+                byKey("name")
+                size(1000)
+                orderedByCreationDate(false)
+            }.operate()
+                .let {
+                    println(it.content.map(SampleEntityAuditIdentity::newValue))
+                }
+        }
     }
 }
 
