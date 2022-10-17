@@ -16,7 +16,9 @@ class InsertAuditsOperation<ID : Serializable, I : Identity<ID>, A : AuditRecord
 ) : Operation<List<A>, Unit> {
     override fun List<A>.operate() {
         with(auditRecordStore) {
-            save()
+            this@operate.filter {
+                it.oldValue != it.newValue
+            }.save()
         }
     }
 }
