@@ -18,7 +18,7 @@ import java.io.Serializable
 private typealias Predicate<ID> = (AuditQueryRequest<ID>) -> Boolean
 private typealias QueryOperation<ID, A> = Operation<AuditQueryRequest<ID>, PageData<A>>
 
-class AuditQueryOperation<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
+internal class AuditQueryOperation<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>>(
     auditRecordStoreQuery: AuditRecordStoreQuery<ID, I, A>,
 ) : Operation<AuditQueryRequest<ID>, PagedData<A>> {
     private val auditQueryByKeysAndUuidsOrdered = AuditQueryByKeysAndUuidsOrdered(auditRecordStoreQuery)

@@ -1,8 +1,8 @@
 package io.arkitik.audit.tale.sample.entity
 
 import io.arkitik.audit.tale.core.domain.AuditRecordIdentity
+import io.arkitik.audit.tale.core.domain.embedded.ActorType
 import io.arkitik.audit.tale.core.domain.embedded.AuditChangeType
-import io.arkitik.audit.tale.core.entity.embedded.ActorTypeImpl
 import io.arkitik.audit.tale.engine.store.adapter.AuditableStoreImpl
 import io.arkitik.audit.tale.engine.store.adapter.creator.CoreAuditStoreIdentityCreator
 import io.arkitik.audit.tale.engine.store.adapter.updater.CoreAuditStoreIdentityUpdater
@@ -10,10 +10,17 @@ import io.arkitik.audit.tale.engine.store.core.log.AuditLogData
 import io.arkitik.audit.tale.engine.store.core.log.AuditLogs
 import io.arkitik.radix.develop.identity.Identity
 import io.arkitik.radix.develop.store.creator.StoreIdentityCreator
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
-import javax.persistence.*
 
 /**
  * Created By [*Ibrahim Al-Tamimi *](https://www.linkedin.com/in/iloom/)
@@ -58,6 +65,11 @@ data class SampleEntityAudit(
     @Column(nullable = false, updatable = false)
     override val creationDate: LocalDateTime = LocalDateTime.now(),
 ) : SampleEntityAuditIdentity
+
+@Embeddable
+class ActorTypeImpl(
+    @Column(nullable = false, updatable = false) override val actorType: String,
+) : ActorType
 
 @Service
 class SampleEntityStore(
