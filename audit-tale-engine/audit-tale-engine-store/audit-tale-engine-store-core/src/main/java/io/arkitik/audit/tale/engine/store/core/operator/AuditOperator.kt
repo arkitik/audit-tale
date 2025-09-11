@@ -15,9 +15,9 @@ interface AuditOperator<I> {
         mapper: (T) -> String?,
     ) = addHistoryRecord(
         AuditLogData(
-            keyName,
-            oldValue,
-            newValue,
+            keyName = keyName,
+            oldValue = oldValue,
+            newValue = newValue,
         ),
         mapper
     )

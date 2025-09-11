@@ -16,7 +16,7 @@ import java.io.Serializable
 class AuditRecordStoreImpl<ID : Serializable, I : Identity<ID>, A : AuditRecordIdentity<ID, I>, E : A>(
     repository: AuditRecordRepository<ID, I, A, E>,
 ) : StoreImpl<String, A, E>(
-    repository
+    repository = repository
 ), AuditRecordStore<ID, I, A> {
     @Suppress("UNCHECKED_CAST")
     override fun A.map() = this as E

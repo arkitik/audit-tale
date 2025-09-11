@@ -7,7 +7,7 @@
     <groupId>io.arkitik.audit.tale</groupId>
     <artifactId>audit-tale</artifactId>
     <packaging>pom</packaging>
-    <version>v1.1.2</version>
+    <version>v2.0.0</version>
     <modules>
         <module>audit-tale-core</module>
         <module>audit-tale-engine</module>
@@ -42,12 +42,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.8</java.version>
-        <kotlin.version>1.7.0</kotlin.version>
-        <dokka.version>1.7.0</dokka.version>
-        <spring-boot.version>2.7.0</spring-boot.version>
-        <logbook.version>2.14.0</logbook.version>
-        <radix.version>v1.4.1</radix.version>
+        <java.version>21</java.version>
+        <dokka.version>1.9.10</dokka.version>
+        <kotlin.version>1.9.22</kotlin.version>
+
+        <spring-boot.version>3.3.0</spring-boot.version>
+        <radix.version>v2.0.0</radix.version>
     </properties>
     <dependencies>
         <dependency>
@@ -142,11 +142,11 @@
                             <plugin>jpa</plugin>
                         </compilerPlugins>
                         <pluginOptions>
-                            <option>all-open:annotation=javax.persistence.Entity</option>
-                            <option>all-open:annotation=javax.persistence.Embeddable</option>
-                            <option>all-open:annotation=javax.persistence.MappedSuperclass</option>
+                            <option>all-open:annotation=jakarta.persistence.Entity</option>
+                            <option>all-open:annotation=jakarta.persistence.Embeddable</option>
+                            <option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
                         </pluginOptions>
-                        <jvmTarget>1.8</jvmTarget>
+                        <jvmTarget>21</jvmTarget>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -180,7 +180,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -193,7 +193,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.6.2</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -202,6 +202,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -242,7 +245,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <stagingProfileId>${sonatype.stagingProfileId}</stagingProfileId>
